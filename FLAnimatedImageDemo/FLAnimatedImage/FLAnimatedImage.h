@@ -45,7 +45,7 @@ typedef NS_ENUM(NSUInteger, FLAnimatedImageInitMode) {
 };
 
 
-#warning Update Description
+//#warning Update Description
 //
 //  An `FLAnimatedImage`'s job is to deliver frames in a highly performant way and works in conjunction with `FLAnimatedImageView`.
 //  It subclasses `NSObject` and not `UIImage` because it's only an "image" in the sense that a sea lion is a lion.
@@ -93,7 +93,7 @@ typedef NS_ENUM(NSUInteger, FLAnimatedImageInitMode) {
 // Intended to be called from main thread synchronously; will return immediately.
 // If the result isn't cached, will return `nil`; the caller should then pause playback, not increment frame counter and keep polling.
 - (UIImage *)imageLazilyCachedAtIndex:(NSUInteger)index;
-#warning Add Comment about how to request frames/performance/cash miss. Note: `-images`
+//#warning Add Comment about how to request frames/performance/cash miss. Note: `-images`
 
 @end
 
