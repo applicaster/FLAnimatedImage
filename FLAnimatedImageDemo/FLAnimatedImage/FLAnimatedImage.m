@@ -813,8 +813,16 @@ static NSHashTable *allAnimatedImagesWeak;
 
 + (UIImage *)animatedImageNamed:(NSString *)name
 {
-    FLAnimatedImage *image = [FLAnimatedImage imageNamed:name inBundle:[NSBundle mainBundle] compatibleWithTraitCollection:nil mode:FLAnimatedImageInitModeFull];
-    return [self animatedImageWithFLAnimatedImage:image options:FLAnimatedImageOptionVariableDelays];
+    UIImage *retVal = nil;
+    FLAnimatedImage *image = [FLAnimatedImage imageNamed:name
+                                                inBundle:[NSBundle mainBundle]
+                           compatibleWithTraitCollection:nil
+                                                    mode:FLAnimatedImageInitModeFull];
+    if (image) {
+        retVal = [self animatedImageWithFLAnimatedImage:image
+                                                options:FLAnimatedImageOptionVariableDelays];
+    }
+    return retVal;
 }
 
 
