@@ -240,7 +240,15 @@ static NSHashTable *allAnimatedImagesWeak;
     FLAnimatedImage *animatedImage = nil;
     
     // By going through super we preserve the lookup and caching behavior.
-    UIImage *image = [super imageNamed:name inBundle:bundle compatibleWithTraitCollection:traitCollection];
+    UIImage *image = nil;
+    if([UIImage respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]){
+        image = [super imageNamed:name inBundle:bundle compatibleWithTraitCollection:traitCollection];
+    }
+    else{
+        image = [self imageNamed:name
+                        inBundle:bundle];
+    }
+
     if (image) {
         animatedImage = [[self alloc] initWithCGImage:image.CGImage scale:image.scale orientation:image.imageOrientation];
         NSString *path = [bundle pathForResource:name ofType:nil];
@@ -251,6 +259,23 @@ static NSHashTable *allAnimatedImagesWeak;
     return animatedImage;
 }
 
++ (UIImage *)imageNamed:(NSString *)imageName
+               inBundle:(NSBundle *)bundle{
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    // The path to take the image from must be related to the main bundle because that's how native imageNamed method works. So we remove the main bundle's path from the given bundle's path.
+    
+    NSString *imagePath = nil;
+    if ([bundle.bundlePath isEqualToString:mainBundle.bundlePath] == YES) {
+        // Is main bundle
+        imagePath = [NSString stringWithFormat:@"%@", imageName];
+    } else {
+        NSString *bundleName = [[bundle.bundlePath componentsSeparatedByString:@"/"] lastObject];
+        imagePath = [NSString stringWithFormat:@"%@/%@", bundleName, imageName];
+    }
+    
+    UIImage *image = [UIImage imageNamed:imagePath];
+    return image;
+}
 
 - (void)prepareAnimatedImageWithData:(NSData *)data mode:(FLAnimatedImageInitMode)mode
 {
