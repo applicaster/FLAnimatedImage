@@ -147,10 +147,8 @@
 
 - (void)setImage:(UIImage *)image
 {
-    if (image) {
-        // Clear out the animated image and implicitly pause animation playback.
-        self.animatedImage = nil;
-    }
+    // Clear out the animated image and implicitly pause animation playback.
+    self.animatedImage = nil;
     
     super.image = image;
 }
