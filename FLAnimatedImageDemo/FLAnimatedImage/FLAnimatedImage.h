@@ -66,7 +66,7 @@ typedef NS_ENUM(NSUInteger, FLAnimatedImageInitMode) {
 @property (nonatomic, assign, readonly) NSUInteger frameCacheSizeCurrent; // Current size of intelligently chosen buffer window; can range in the interval [1..frameCount]
 @property (nonatomic, assign) NSUInteger frameCacheSizeMax; // Allow to cap the cache size; 0 means no specific limit (default)
 
-@property (nonatomic, strong, readonly) NSData *data; // The data the receiver was initialized with
+//@property (nonatomic, strong, readonly) NSData *data; // The data the receiver was initialized with
 @property (nonatomic, assign, readonly) FLAnimatedImageInitMode mode; // The mode the receiver was initialized with
 
 #if defined(DEBUG) && DEBUG
