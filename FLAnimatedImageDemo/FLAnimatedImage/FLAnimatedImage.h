@@ -67,7 +67,6 @@ typedef NS_ENUM(NSUInteger, FLAnimatedImageInitMode) {
 @property (nonatomic, assign) NSUInteger frameCacheSizeMax; // Allow to cap the cache size; 0 means no specific limit (default). If high it might be more smooth but will cost more memory.
 @property (nonatomic, assign) NSUInteger shouldPredrawImage; // default is NO. If YES it will be more smooth but will cost much more memory. You may consider set it YES for small size gif (in terms of canvas size not memory).
 
-//@property (nonatomic, strong, readonly) NSData *data; // The data the receiver was initialized with
 @property (nonatomic, assign, readonly) FLAnimatedImageInitMode mode; // The mode the receiver was initialized with
 
 #if defined(DEBUG) && DEBUG
