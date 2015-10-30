@@ -281,10 +281,6 @@ static NSHashTable *allAnimatedImagesWeak;
 {
     // Do one-time initializations of `readonly` properties directly to ivar to prevent implicit actions and avoid need for private `readwrite` property overrides.
     
-    // Keep a strong reference to `data` and expose it read-only publicly.
-    // However, we will use the `_imageSource` as handler to the image data throughout our life cycle.
-//    _data = data;
-    
     _mode = mode;
     
     // Note: We could leverage `CGImageSourceCreateWithURL` too to add additional initializers
