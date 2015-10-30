@@ -571,7 +571,7 @@ static NSHashTable *allAnimatedImagesWeak;
     
     // Start streaming requested frames in the background into the cache.
     // Avoid capturing self in the block as there's no reason to keep doing work if the animated image went away.
-    __block FLAnimatedImage *blockSelf = self;
+    __weak FLAnimatedImage *weakSelf = self;
     dispatch_async(self.serialQueue, ^{
         // Produce and cache next needed frame.
         void (^frameRangeBlock)(NSRange, BOOL *) = ^(NSRange range, BOOL *stop) {
@@ -580,27 +580,27 @@ static NSHashTable *allAnimatedImagesWeak;
 #if defined(DEBUG) && DEBUG
                 CFTimeInterval predrawBeginTime = CACurrentMediaTime();
 #endif
-                UIImage *image = [blockSelf predrawnImageAtIndex:i];
+                UIImage *image = [weakSelf predrawnImageAtIndex:i];
 #if defined(DEBUG) && DEBUG
                 CFTimeInterval predrawDuration = CACurrentMediaTime() - predrawBeginTime;
                 CFTimeInterval slowdownDuration = 0.0;
-                if ([blockSelf.debug_delegate respondsToSelector:@selector(debug_animatedImagePredrawingSlowdownFactor:)]) {
-                    CGFloat predrawingSlowdownFactor = [blockSelf.debug_delegate debug_animatedImagePredrawingSlowdownFactor:blockSelf];
+                if ([weakSelf.debug_delegate respondsToSelector:@selector(debug_animatedImagePredrawingSlowdownFactor:)]) {
+                    CGFloat predrawingSlowdownFactor = [weakSelf.debug_delegate debug_animatedImagePredrawingSlowdownFactor:weakSelf];
                     slowdownDuration = predrawDuration * predrawingSlowdownFactor - predrawDuration;
                     [NSThread sleepForTimeInterval:slowdownDuration];
                 }
-                FLLogVerbose(@"Predrew frame %lu in %f ms for animated image: %@", (unsigned long)i, (predrawDuration + slowdownDuration) * 1000, blockSelf);
+                FLLogVerbose(@"Predrew frame %lu in %f ms for animated image: %@", (unsigned long)i, (predrawDuration + slowdownDuration) * 1000, weakSelf);
 #endif
                 // The results get returned one by one as soon as they're ready (and not in batch).
                 // The benefits of having the first frames as quick as possible outweigh building up a buffer to cope with potential hiccups when the CPU suddenly gets busy.
-                if (image && blockSelf) {
+                if (image && weakSelf) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        blockSelf.cachedFrames[i] = image;
-                        [blockSelf.cachedFrameIndexes addIndex:i];
-                        [blockSelf.requestedFrameIndexes removeIndex:i];
+                        weakSelf.cachedFrames[i] = image;
+                        [weakSelf.cachedFrameIndexes addIndex:i];
+                        [weakSelf.requestedFrameIndexes removeIndex:i];
 #if defined(DEBUG) && DEBUG
-                        if ([blockSelf.debug_delegate respondsToSelector:@selector(debug_animatedImage:didUpdateCachedFrames:)]) {
-                            [blockSelf.debug_delegate debug_animatedImage:blockSelf didUpdateCachedFrames:blockSelf.cachedFrameIndexes];
+                        if ([weakSelf.debug_delegate respondsToSelector:@selector(debug_animatedImage:didUpdateCachedFrames:)]) {
+                            [weakSelf.debug_delegate debug_animatedImage:weakSelf didUpdateCachedFrames:weakSelf.cachedFrameIndexes];
                         }
 #endif
                     });
@@ -625,7 +625,9 @@ static NSHashTable *allAnimatedImagesWeak;
     CFRelease(imageRef);
     
     // Loading in the image object is only half the work, the displaying image view would still have to synchronosly wait and decode the image, so we go ahead and do that here on the background thread.
-    image = [[self class] predrawnImageFromImage:image];
+    if(self.shouldPredrawImage){
+        image = [[self class] predrawnImageFromImage:image];
+    }
     
     return image;
 }
@@ -666,7 +668,7 @@ static NSHashTable *allAnimatedImagesWeak;
 
 - (void)purgeFrameCacheIfNeeded
 {
-    __block FLAnimatedImage *blockSelf = self;
+    __weak FLAnimatedImage *weakSelf = self;
     
     // Purge frames that are currently cached but don't need to be.
     // But not if we're still under the number of frames to cache.
@@ -677,13 +679,13 @@ static NSHashTable *allAnimatedImagesWeak;
         [indexesToPurge enumerateRangesUsingBlock:^(NSRange range, BOOL *stop) {
             // Iterate through contiguous indexes; can be faster than `enumerateIndexesInRange:options:usingBlock:`.
             for (NSUInteger i = range.location; i < NSMaxRange(range); i++) {
-                [blockSelf.cachedFrameIndexes removeIndex:i];
-                blockSelf.cachedFrames[i] = [NSNull null];
+                [weakSelf.cachedFrameIndexes removeIndex:i];
+                weakSelf.cachedFrames[i] = [NSNull null];
                 // Note: Don't `CGImageSourceRemoveCacheAtIndex` on the image source for frames that we don't want cached any longer to maintain O(1) time access.
 #if defined(DEBUG) && DEBUG
-                if ([blockSelf.debug_delegate respondsToSelector:@selector(debug_animatedImage:didUpdateCachedFrames:)]) {
+                if ([weakSelf.debug_delegate respondsToSelector:@selector(debug_animatedImage:didUpdateCachedFrames:)]) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [blockSelf.debug_delegate debug_animatedImage:blockSelf didUpdateCachedFrames:blockSelf.cachedFrameIndexes];
+                        [weakSelf.debug_delegate debug_animatedImage:weakSelf didUpdateCachedFrames:weakSelf.cachedFrameIndexes];
                     });
                 }
 #endif
