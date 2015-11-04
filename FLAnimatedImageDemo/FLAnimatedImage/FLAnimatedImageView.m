@@ -158,13 +158,13 @@
 {
     if([image isKindOfClass:[FLAnimatedImage class]]){
         [self setAnimatedImage:(FLAnimatedImage *)image];
+        super.image = nil;
     }
     else{
         // In case the image given is nil both will be reset to nil :)
         
         // Clear out the animated image and implicitly pause animation playback.
         self.animatedImage = nil;
-        
         super.image = image;
     }
 }

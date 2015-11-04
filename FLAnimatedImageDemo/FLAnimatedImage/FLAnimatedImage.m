@@ -162,19 +162,22 @@ static NSHashTable *allAnimatedImagesWeak;
 
 - (instancetype)initWithImageData:(NSData *)data
 {
-    return [self initWithImageData:data mode:FLAnimatedImageInitModeDefault];
+    self = [self initWithImageData:data mode:FLAnimatedImageInitModeDefault];
+    return self;
 }
 
 
 - (instancetype)initWithImageData:(NSData *)data mode:(FLAnimatedImageInitMode)mode
 {
-    return [self initWithImageData:data mode:mode scale:1.0];
+    self = [self initWithImageData:data mode:mode scale:1.0];
+    return self;
 }
 
 
 - (instancetype)initWithImageData:(NSData *)data scale:(CGFloat)scale
 {
-    return [self initWithImageData:data mode:FLAnimatedImageInitModeDefault scale:scale];
+    self = [self initWithImageData:data mode:FLAnimatedImageInitModeDefault scale:scale];
+    return self;
 }
 
 
@@ -188,6 +191,12 @@ static NSHashTable *allAnimatedImagesWeak;
 }
 
 
+- (instancetype)initWithContentsOfFile:(NSString *)path{
+    NSData *imageData = [NSData dataWithContentsOfFile:path];
+    self = [FLAnimatedImage imageWithData:imageData];
+    return self;
+}
+
 + (instancetype)imageWithData:(NSData *)data mode:(FLAnimatedImageInitMode)mode
 {
     return [self imageWithData:data mode:mode scale:1.0];
@@ -198,7 +207,6 @@ static NSHashTable *allAnimatedImagesWeak;
 {
     return [[FLAnimatedImage alloc] initWithImageData:data mode:mode scale:scale];
 }
-
 
 #pragma mark Adopting UIImage Convenience Factory Methods
 
