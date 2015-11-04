@@ -122,7 +122,7 @@
     // UIImageView's intrinsic content size seems to be the size of its image. The obvious approach, simply calling `-invalidateIntrinsicContentSize` when setting an animated image, results in UIImageView steadfastly returning `{UIViewNoIntrinsicMetric, UIViewNoIntrinsicMetric}` for its intrinsicContentSize.
     // (Perhaps UIImageView bypasses its `-image` getter in its implementation of `-intrinsicContentSize`, as `-image` is not called after calling `-invalidateIntrinsicContentSize`.)
     if (self.animatedImage) {
-        intrinsicContentSize = self.image.size;
+        intrinsicContentSize = self.currentFrame.size;
     }
     
     return intrinsicContentSize;
@@ -136,21 +136,37 @@
 {
     UIImage *image = nil;
     if (self.animatedImage) {
-        // Initially set to the poster image.
-        image = self.currentFrame;
+        image = self.animatedImage;
     } else {
         image = super.image;
     }
     return image;
 }
 
+- (UIImage *)currentFrame{
+    UIImage *image = nil;
+    if (self.animatedImage) {
+        // Initially set to the poster image.
+        image = _currentFrame;
+    } else {
+        image = super.image;
+    }
+    return image;
+}
 
 - (void)setImage:(UIImage *)image
 {
-    // Clear out the animated image and implicitly pause animation playback.
-    self.animatedImage = nil;
-    
-    super.image = image;
+    if([image isKindOfClass:[FLAnimatedImage class]]){
+        [self setAnimatedImage:(FLAnimatedImage *)image];
+    }
+    else{
+        // In case the image given is nil both will be reset to nil :)
+        
+        // Clear out the animated image and implicitly pause animation playback.
+        self.animatedImage = nil;
+        
+        super.image = image;
+    }
 }
 
 
@@ -286,7 +302,7 @@
 
 - (void)displayLayer:(CALayer *)layer
 {
-    layer.contents = (__bridge id)self.image.CGImage;
+    layer.contents = (__bridge id)self.currentFrame.CGImage;
 }
 
 
