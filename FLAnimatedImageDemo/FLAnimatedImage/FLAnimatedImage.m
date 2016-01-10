@@ -324,9 +324,7 @@ static NSHashTable *allAnimatedImagesWeak;
     if (mode == FLAnimatedImageInitModeDefault) {
         
     } else if (mode == FLAnimatedImageInitModeLazy) {
-#warning Implement
     } else if (mode == FLAnimatedImageInitModeFull) {
-#warning Implement
     } else {
         FLLogError(@"Unsupported `FLAnimatedImageInitMode`");
     }
@@ -470,8 +468,6 @@ static NSHashTable *allAnimatedImagesWeak;
 
 - (NSTimeInterval)duration
 {
-#warning What if this hasn't been initialized yet?
-#warning Cache this calculation?
     return [[self.delayTimes valueForKeyPath:@"@sum.self"] doubleValue];
 }
 
@@ -480,12 +476,10 @@ static NSHashTable *allAnimatedImagesWeak;
 
 - (NSUInteger)countOfFrames
 {
-#warning What if this hasn't been initialized yet?
     return self.frameCount;
 }
 
 
-#warning Should repeat images multiple times that have a longer frame delay.
 - (id)objectInFramesAtIndex:(NSUInteger)index
 {
     UIImage *image = nil;
@@ -493,16 +487,12 @@ static NSHashTable *allAnimatedImagesWeak;
     if ([tryImage isKindOfClass:[UIImage class]]) {
         image = tryImage;
     } else {
-#warning Do we waste a lot of resources when we predraw images to then only access `-images` (e.g. for watch)?
         CGImageRef imageRef = CGImageSourceCreateImageAtIndex(_imageSource, index, NULL);
         image = [UIImage imageWithCGImage:imageRef];
         CFRelease(imageRef);
     }
     return image;
 }
-
-#warning Implement -framesAtIndexes: for performance?
-
 
 #pragma mark - Public Methods
 
@@ -832,7 +822,6 @@ static NSHashTable *allAnimatedImagesWeak;
 {
     NSString *description = [super description];
     
-#warning add more properties?
     description = [description stringByAppendingFormat:@" size=%@", NSStringFromCGSize(self.size)];
     description = [description stringByAppendingFormat:@" frameCount=%lu", (unsigned long)self.frameCount];
     

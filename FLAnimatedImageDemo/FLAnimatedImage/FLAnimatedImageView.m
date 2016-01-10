@@ -33,7 +33,6 @@
 #pragma mark - Accessors
 #pragma mark Public
 
-#warning Unify `-setAnimatedImage:` and `-setImage:`?
 - (void)setAnimatedImage:(FLAnimatedImage *)animatedImage
 {
     if (![_animatedImage isEqual:animatedImage]) {
