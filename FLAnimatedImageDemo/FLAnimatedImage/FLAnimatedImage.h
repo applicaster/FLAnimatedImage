@@ -143,8 +143,6 @@ typedef NS_OPTIONS(NSUInteger, FLAnimatedImageOptions) {
             #import "CocoaLumberjack.h"
         #elif __has_include("<CocoaLumberjack/DDLog.h>")
             #import <CocoaLumberjack/DDLog.h>
-        #elif __has_include("DDLog.h")
-            #import "DDLog.h"
         #endif
     #elif defined(COCOAPODS_POD_AVAILABLE_CocoaLumberjack) || defined(__POD_CocoaLumberjack)
         #if COCOAPODS_VERSION_MAJOR_CocoaLumberjack == 2
