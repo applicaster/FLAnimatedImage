@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
-  spec.name             = "FLAnimatedImage"
-  spec.version          = "1.0.8"
+  spec.name             = "FLAnimatedImage_Applicaster"
+  spec.version          = "1.0.9"
   spec.summary          = "Performant animated GIF engine for iOS"
   spec.description      = <<-DESC
                         - Plays multiple GIFs simultaneously with a playback speed comparable to desktop browsers
@@ -8,7 +8,7 @@ Pod::Spec.new do |spec|
                         - Behaves gracefully under memory pressure
                         - Eliminates delays or blocking during the first playback loop
                         - Interprets the frame delays of fast GIFs the same way modern browsers do
-                        
+
                         It's a well-tested [component that powers all GIFs in Flipboard](http://engineering.flipboard.com/2014/05/animated-gif/).
                         DESC
 
@@ -18,8 +18,10 @@ Pod::Spec.new do |spec|
   spec.author           = { "Raphael Schaad" => "raphael.schaad@gmail.com" }
   spec.social_media_url = "https://twitter.com/raphaelschaad"
   spec.platform         = :ios, "6.0"
-  spec.source           = { :git => "https://github.com/Flipboard/FLAnimatedImage.git", :tag => "1.0.8" }
-  spec.source_files     = "FLAnimatedImageDemo/FLAnimatedImage", "FLAnimatedImageDemo/FLAnimatedImage/**/*.{h,m}"
+  spec.source           = { :git => "https://github.com/applicaster/FLAnimatedImage.git", :tag => spec.version.to_s }
+
+  spec.source_files     =  "FLAnimatedImageDemo/FLAnimatedImage/**/*.{h,m}"
+  spec.public_header_files  = 'FLAnimatedImageDemo/FLAnimatedImage/**/*.h'
   spec.frameworks       = "QuartzCore", "ImageIO", "MobileCoreServices", "CoreGraphics"
   spec.requires_arc     = true
 end
