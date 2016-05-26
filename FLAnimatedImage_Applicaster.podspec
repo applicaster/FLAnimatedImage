@@ -17,7 +17,7 @@ Pod::Spec.new do |spec|
   spec.license          = { :type => "MIT", :file => "LICENSE" }
   spec.author           = { "Raphael Schaad" => "raphael.schaad@gmail.com" }
   spec.social_media_url = "https://twitter.com/raphaelschaad"
-  spec.platform         = :ios, "6.0"
+  spec.platform         = :ios, "8.0"
   spec.source           = { :git => "https://github.com/applicaster/FLAnimatedImage.git", :tag => spec.version.to_s }
 
   spec.source_files     =  "FLAnimatedImageDemo/FLAnimatedImage/**/*.{h,m}"
@@ -25,6 +25,6 @@ Pod::Spec.new do |spec|
   spec.frameworks       = "QuartzCore", "ImageIO", "MobileCoreServices", "CoreGraphics"
   spec.requires_arc     = true
 
-  s.dependency 'CocoaLumberjack/Swift'
+  spec.dependency 'CocoaLumberjack/Swift'
 
 end
