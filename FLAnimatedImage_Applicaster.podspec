@@ -24,4 +24,7 @@ Pod::Spec.new do |spec|
   spec.public_header_files  = 'FLAnimatedImageDemo/FLAnimatedImage/**/*.h'
   spec.frameworks       = "QuartzCore", "ImageIO", "MobileCoreServices", "CoreGraphics"
   spec.requires_arc     = true
+
+  s.dependency 'CocoaLumberjack/Swift'
+
 end
